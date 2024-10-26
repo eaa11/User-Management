@@ -20,7 +20,7 @@
 
         public bool IsActive { get; private set; }
 
-        private List<Phone> _phones = new();
+        private readonly List<Phone> _phones = new();
 
         public IReadOnlyCollection<Phone> Phones => _phones.AsReadOnly();
 
@@ -48,7 +48,7 @@
             return new User(Guid.NewGuid(), name, email, password);
         }
 
-        internal void ActivateUser()
+        internal void Activate()
         {
             if (!IsActive)
             {
@@ -57,7 +57,7 @@
             }
         }
 
-        internal void DeactivateUser()
+        internal void Deactivate()
         {
             if (IsActive)
             {

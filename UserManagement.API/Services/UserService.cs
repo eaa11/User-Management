@@ -31,25 +31,53 @@ namespace UserManagement.API.Services
                     return Result<RegistrationDto>.Failure("Email already in use.");
                 }
 
-                var user = User.Create(
-                    new Name(request.Name),
-                    new Email(request.Email),
-                    new Password(request.Password, _passwordSettings.Value.RegexPattern)
-                  );
+                var user = CreateUser(request);
 
-                foreach (var phoneRequest in request.Phones)
-                {
-                    var phone = new Phone(phoneRequest.Number,
-                                          phoneRequest.CityCode,
-                                          phoneRequest.CountryCode);
-                    user.AddPhone(phone);
-                }
+                AddPhonesToUser(user, request.Phones);
 
-                await _userRepository.AddAsync(user);
+                await SaveUserAsync(user);
 
-                await _userRepository.SaveChangesAsync();
+                var response = RegistrationResponse(user);
 
-                var response = new RegistrationDto(
+                return Result<RegistrationDto>.Success(response);
+            }
+            catch (ValidationException ex)
+            {
+                return Result<RegistrationDto>.Failure(ex.Message);
+            }
+        }
+
+        private User CreateUser(RegisterUserRequest request)
+        {
+            return User.Create(
+                new Name(request.Name),
+                new Email(request.Email),
+                new Password(request.Password, _passwordSettings.Value.RegexPattern)
+            );
+        }
+
+        private void AddPhonesToUser(User user, IEnumerable<RegisterPhoneRequest> phoneRequests)
+        {
+            foreach (var phoneRequest in phoneRequests)
+            {
+                var phone = new Phone(
+                    phoneRequest.Number,
+                    phoneRequest.CityCode,
+                    phoneRequest.CountryCode
+                );
+                user.AddPhone(phone);
+            }
+        }
+
+        private async Task SaveUserAsync(User user)
+        {
+            await _userRepository.AddAsync(user);
+            await _userRepository.SaveChangesAsync();
+        }
+
+        private RegistrationDto RegistrationResponse(User user)
+        {
+            return new RegistrationDto(
                     user.Id,
                     user.Created.Value,
                     user.Modified.Value,
@@ -57,12 +85,6 @@ namespace UserManagement.API.Services
                     user.Token.ToString(),
                     user.IsActive
                 );
-                return Result<RegistrationDto>.Success(response);
-            }
-            catch (ValidationException ex)
-            {
-                return Result<RegistrationDto>.Failure(ex.Message);
-            }
         }
     }
 }
