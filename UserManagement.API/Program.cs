@@ -1,7 +1,7 @@
 using FastEndpoints;
 using Microsoft.AspNetCore.Diagnostics;
-using UserManagement.API;
-using UserManagement.API.Extensions;
+using UserManagement.API.Commom;
+using UserManagement.API.Commom.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,8 +54,3 @@ app.UseFastEndpoints();
 app.UseHttpsRedirection();
 
 app.Run();
-
-public partial class Program
-
-
-{ }// for testing purposes
