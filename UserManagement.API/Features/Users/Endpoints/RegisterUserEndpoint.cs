@@ -12,7 +12,7 @@ namespace UserManagement.API.Features.Users.Endpoints
 
         public override void Configure()
         {
-            Post("/users");
+            Post("api/users");
             AllowAnonymous();
         }
 
