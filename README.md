@@ -35,7 +35,7 @@ The **User Management API** is a .NET 8 Web API designed to handle user registra
 - **Data Transfer Object (DTO) Pattern**
 - **Dependency Injection**
 - **SOLID Principles**
-- **(DDD) for modeling object**
+- **(DDD) Principles**
 
 ### Database
 
