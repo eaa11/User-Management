@@ -5,13 +5,13 @@
 - [Description](#description)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
+- [ERD Diagram](#diagram)
 - [Installation and Setup](#installation-and-setup)
     - [Prerequisites](#prerequisites)
     - [Clone the Repository](#clone-the-repository)
     - [Database Setup](#database-setup)
     - [Backend Setup](#backend-setup)
     - [Run the API](#run-the-api)
-- [Usage](#usage)
 - [Project Structure](#project-structure)
 
 ## Description 
@@ -40,6 +40,12 @@ The **User Management API** is a .NET 8 Web API designed to handle user registra
 ### Database
 
 - **SQL Server**
+
+
+## Diagram
+
+![image](https://github.com/user-attachments/assets/183dab64-1577-4ceb-a6bb-ee3aa5c5d471)
+
 
 ## Installation and Setup 🚀
 
