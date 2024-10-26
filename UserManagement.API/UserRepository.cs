@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UserManagement.API.Abstractions;
+using UserManagement.API.Data;
 using UserManagement.API.Entities.Users;
 
 namespace UserManagement.API
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IUsersDbContext _context;
+        private readonly UsersDbContext _context;
 
-        public UserRepository(IUsersDbContext context)
+        public UserRepository(UsersDbContext context)
         {
             _context = context;
         }
@@ -18,9 +19,15 @@ namespace UserManagement.API
             await _context.Users.AddAsync(user);
         }
 
-        public async Task<User?> GetUserByEmailAsync(string email)
+        public async Task<bool> IsRegisteredAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email.Value == email);
+            return await _context.Users
+                .AnyAsync(user => user.Email == new Email(email));
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

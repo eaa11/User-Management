@@ -6,18 +6,28 @@
 
         public string? ErrorMessage { get; }
 
-        public Result(T value)
+        public bool IsSuccess { get; }
+
+        public int StatusCode { get; }
+
+        private Result(T value, int statusCode)
         {
             Value = value;
+            IsSuccess = true;
+            StatusCode = statusCode;
         }
 
-        public Result(string error)
+        private Result(string error, int statusCode)
         {
             ErrorMessage = error;
+            IsSuccess = false;
+            StatusCode = statusCode;
         }
 
-        public static Result<T> Success(T value) => new Result<T>(value);
+        public static Result<T> Success(T value, int statusCode = 200) =>
+            new Result<T>(value, statusCode);
 
-        public static Result<T> Failure(string error) => new Result<T>(error);
+        public static Result<T> Failure(string error, int statusCode = 400) =>
+            new Result<T>(error, statusCode);
     }
 }

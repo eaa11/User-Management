@@ -1,10 +1,8 @@
 ﻿namespace UserManagement.API.Dto
 {
-    public record RegistrationResponseDto
+    public record RegistrationDto
     (
         Guid Id,
-        string Name,
-        string Email,
         DateTime Created,
         DateTime Modified,
         DateTime LastLogin,

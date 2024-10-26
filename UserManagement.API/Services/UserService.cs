@@ -1,4 +1,5 @@
-﻿using UserManagement.API.Abstractions;
+﻿using Microsoft.Extensions.Options;
+using UserManagement.API.Abstractions;
 using UserManagement.API.Dto;
 using UserManagement.API.Entities.Users;
 using UserManagement.API.Resquests;
@@ -7,48 +8,61 @@ namespace UserManagement.API.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly IOptions<PasswordSettings> _passwordSettings;
+
+        public UserService(
+            IUserRepository userRepository,
+            IOptions<PasswordSettings> passwordSettings)
         {
-            _unitOfWork = unitOfWork;
+            _userRepository = userRepository;
+            _passwordSettings = passwordSettings;
         }
 
-        public async Task<Result<RegistrationResponseDto>> RegisterAsync(UserCreateRequest request)
+        public async Task<Result<RegistrationDto>> RegisterAsync(RegisterUserRequest request)
         {
-            var existingUser = await _unitOfWork.Users.GetUserByEmailAsync(request.Email);
-            if (existingUser != null)
+            try
             {
-                return Result<RegistrationResponseDto>.Failure("Email already exists.");
+                var isRegistered = await _userRepository.IsRegisteredAsync(request.Email);
+
+                if (isRegistered)
+                {
+                    return Result<RegistrationDto>.Failure("Email already in use.");
+                }
+
+                var user = User.Create(
+                    new Name(request.Name),
+                    new Email(request.Email),
+                    new Password(request.Password, _passwordSettings.Value.RegexPattern)
+                  );
+
+                foreach (var phoneRequest in request.Phones)
+                {
+                    var phone = new Phone(phoneRequest.Number,
+                                          phoneRequest.CityCode,
+                                          phoneRequest.CountryCode);
+                    user.AddPhone(phone);
+                }
+
+                await _userRepository.AddAsync(user);
+
+                await _userRepository.SaveChangesAsync();
+
+                var response = new RegistrationDto(
+                    user.Id,
+                    user.Created.Value,
+                    user.Modified.Value,
+                    user.LastLogin.Value,
+                    user.Token.ToString(),
+                    user.IsActive
+                );
+                return Result<RegistrationDto>.Success(response);
             }
-
-            var user = User.Create(new Name(request.Name),
-                                    new Email(request.Email),
-                                    new Password(request.Password));
-
-            foreach (var phoneRequest in request.Phones)
+            catch (ValidationException ex)
             {
-                var phone = new Phone(phoneRequest.Number,
-                                      phoneRequest.CityCode,
-                                      phoneRequest.CountryCode);
-                user.AddPhone(phone);
+                return Result<RegistrationDto>.Failure(ex.Message);
             }
-
-            await _unitOfWork.Users.AddAsync(user);
-
-            await _unitOfWork.CommitAsync();
-
-            var response = new RegistrationResponseDto(
-                user.Id,
-                user.Name.ToString(),
-                user.Email.ToString(),
-                user.Created.Value,
-                user.Modified.Value,
-                user.LastLogin.Value,
-                user.Token.ToString(),
-                user.IsActive
-            );
-            return Result<RegistrationResponseDto>.Success(response);
         }
     }
 }

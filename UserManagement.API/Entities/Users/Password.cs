@@ -4,15 +4,19 @@ namespace UserManagement.API.Entities.Users
 {
     public record Password
     {
+        private static readonly string DefaultPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$";
         public string Value { get; }
-        public const string PASSWORD_PATTERN = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$";
-        public Password(string value)
+
+        public Password(string value, string? pattern = null)
         {
-            if (!Regex.IsMatch(value, PASSWORD_PATTERN))
+            pattern ??= DefaultPattern;
+            if (!Regex.IsMatch(value, pattern))
             {
-                throw new ArgumentException("The password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.");
+                throw new ValidationException("The password does not meet the required format.");
             }
             Value = value;
         }
+
+        public override string ToString() => Value;
     }
 }

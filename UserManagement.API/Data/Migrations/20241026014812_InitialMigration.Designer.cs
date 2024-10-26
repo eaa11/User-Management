@@ -12,7 +12,7 @@ using UserManagement.API.Data;
 namespace UserManagement.API.Data.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20241026011408_InitialMigration")]
+    [Migration("20241026014812_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

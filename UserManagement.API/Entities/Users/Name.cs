@@ -6,10 +6,11 @@ public record Name
 
     public Name(string value)
     {
-        if (string.IsNullOrWhiteSpace(Value))
+        if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentException("Name cannot be empty.");
+            throw new ValidationException("Name cannot be empty.");
         }
         Value = value;
     }
+    public override string ToString() => Value;
 }

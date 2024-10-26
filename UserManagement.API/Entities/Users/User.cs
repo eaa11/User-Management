@@ -70,7 +70,7 @@
         {
             if (phone == null)
             {
-                throw new ArgumentException("Please, insert a phone number.");
+                throw new ValidationException("Please, insert a phone number.");
             }
             _phones.Add(phone);
         }

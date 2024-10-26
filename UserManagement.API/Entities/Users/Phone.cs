@@ -9,9 +9,9 @@ public record Phone
 
     public Phone(string number, string cityCode, string countryCode)
     {
-        if (string.IsNullOrWhiteSpace(Number) || string.IsNullOrWhiteSpace(CityCode) || string.IsNullOrWhiteSpace(CountryCode))
+        if (string.IsNullOrWhiteSpace(number) || string.IsNullOrWhiteSpace(cityCode) || string.IsNullOrWhiteSpace(countryCode))
         {
-            throw new ArgumentException("Phone data cannot be empty.");
+            throw new ValidationException("Phone data cannot be empty.");
         }
 
         Number = number;

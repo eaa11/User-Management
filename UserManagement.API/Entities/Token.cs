@@ -8,7 +8,7 @@
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Token cannot be null or empty.");
+                throw new ValidationException("Token cannot be null or empty.");
             }
 
             Value = value;

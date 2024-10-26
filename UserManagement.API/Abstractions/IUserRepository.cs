@@ -6,6 +6,8 @@ namespace UserManagement.API.Abstractions
     {
         Task AddAsync(User user);
 
-        Task<User?> GetUserByEmailAsync(string email);
+        Task<bool> IsRegisteredAsync(string email);
+
+        Task SaveChangesAsync();
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using UserManagement.API.Abstractions;
 using UserManagement.API.Entities.Users;
 
 namespace UserManagement.API.Data
 {
-    public class UsersDbContext : DbContext, IUsersDbContext
+    public class UsersDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
 

@@ -5,6 +5,6 @@ namespace UserManagement.API.Abstractions
 {
     public interface IUserService
     {
-        Task<Result<RegistrationResponseDto>> RegisterAsync(UserCreateRequest request);
+        Task<Result<RegistrationDto>> RegisterAsync(RegisterUserRequest request);
     }
 }

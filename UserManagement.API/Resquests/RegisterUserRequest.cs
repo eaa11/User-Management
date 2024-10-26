@@ -1,10 +1,10 @@
 ﻿namespace UserManagement.API.Resquests
 {
-    public record UserCreateRequest
+    public record RegisterUserRequest
         (
             string Name,
             string Email,
             string Password,
-            List<PhoneCreateRequest> Phones
+            List<RegisterPhoneRequest> Phones
         );
 }

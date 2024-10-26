@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using UserManagement.API.Constants;
 using UserManagement.API.Entities;
 using UserManagement.API.Entities.Users;
 
@@ -9,18 +10,18 @@ namespace UserManagement.API.Data.EntityConfiguration
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         private static readonly ValueConverter<Name, string> NameConverter = new(
-            name => name.ToString(),
+            name => name.Value,
             value => new Name(value)
         );
 
         private static readonly ValueConverter<Email, string> EmailConverter = new(
-            email => email.ToString(),
+            email => email.Value,
             value => new Email(value)
         );
 
         private static readonly ValueConverter<Password, string> PasswordConverter = new(
-            password => password.ToString(),
-            value => new Password(value)
+        password => password.Value,
+            value => new Password(value, null)
         );
 
         private static readonly ValueConverter<Token, string> TokenConverter = new(
@@ -40,17 +41,18 @@ namespace UserManagement.API.Data.EntityConfiguration
 
             builder.Property(user => user.Name)
                 .IsRequired()
-                .HasMaxLength(100)
+                .HasMaxLength(DataSchemaConstants.DEFAULT_NAME_LENGTH)
                 .HasConversion(NameConverter);
 
             builder.Property(user => user.Email)
                 .IsRequired()
-                .HasMaxLength(100)
+                .HasMaxLength(DataSchemaConstants.DEFAULT_EMAIL_LENGTH)
                 .HasConversion(EmailConverter);
             builder.HasIndex(u => u.Email).IsUnique();
 
             builder.Property(user => user.Password)
                 .HasConversion(PasswordConverter);
+
             builder.Property(user => user.Token)
                 .HasConversion(TokenConverter);
 

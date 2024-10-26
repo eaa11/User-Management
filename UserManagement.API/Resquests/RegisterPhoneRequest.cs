@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.API.Resquests
 {
-    public record PhoneCreateRequest
+    public record RegisterPhoneRequest
     (
         string Number,
         string CityCode,

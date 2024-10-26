@@ -8,7 +8,7 @@
         {
             if (value > DateTime.Now)
             {
-                throw new ArgumentException("Date cannot be in the future.");
+                throw new ValidationException("Date cannot be in the future.");
             }
             Value = value;
         }

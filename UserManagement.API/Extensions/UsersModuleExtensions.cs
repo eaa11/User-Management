@@ -12,13 +12,14 @@ namespace UserManagement.API.Extensions
             ConfigurationManager config)
         {
             string? connectionString = config.GetConnectionString("DefaultConnection");
-            services.AddDbContext<IUsersDbContext, UsersDbContext>(options =>
+            services.AddDbContext<UsersDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IUserService, UserService>();
+
+            services.Configure<PasswordSettings>(config.GetSection("PasswordSettings"));
             return services;
         }
     }
