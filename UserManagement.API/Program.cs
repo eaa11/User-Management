@@ -5,6 +5,10 @@ using UserManagement.API.Commom.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Config"))
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 // Add services to the container.
 
 builder.Services.AddFastEndpoints();
